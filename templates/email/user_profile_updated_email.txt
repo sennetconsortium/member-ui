@@ -1,0 +1,57 @@
+The following SenNet user has updated access requests list:
+
+Name: {{ data['first_name'] }} {{ data['last_name'] }} 
+Email: {{ data['email'] }}
+
+
+Old access requests:
+
+{% for old_req in old_access_requests_data['access_requests'] %}
+- {{ old_req }}
+{% endfor %}
+
+{% if 'SenNet Data Via Globus' in old_access_requests_data['access_requests'] %}
+Globus username to be used for SenNet Data group access: {{ old_access_requests_data['globus_identity'] }} <br />
+{% endif %}
+
+{% if 'SenNet Google Drive Share' in old_access_requests_data['access_requests'] %}
+Google account for SenNet Google Drive Share: {{ old_access_requests_data['google_email'] }}
+{% endif %}
+
+{% if 'SenNet GitHub Repository' in old_access_requests_data['access_requests'] %}
+Github username: {{ old_access_requests_data['github_username'] }}
+{% endif %}
+
+{% if 'SenNet Slack Workspace' in old_access_requests_data['access_requests'] %}
+Email for SenNet Slack Workspace: {{ old_access_requests_data['slack_username'] }}
+{% endif %}
+
+{% if 'protocols.io' in old_access_requests_data['access_requests'] %}
+Email for protocols.io: {{ old_access_requests_data['protocols_io_email'] }}
+{% endif %}
+
+New access requests:
+
+{% for new_req in data['access_requests'] %}
+- {{ new_req }}
+{% endfor %}
+
+{% if 'SenNet Data Via Globus' in data['access_requests'] %}
+Globus username to be used for SenNet Data group access: {{ data['globus_identity'] }} <br />
+{% endif %}
+
+{% if 'SenNet Google Drive Share' in data['access_requests'] %}
+Google account for SenNet Google Drive Share: {{ data['google_email'] }}
+{% endif %}
+
+{% if 'SenNet GitHub Repository' in data['access_requests'] %}
+Github username: {{ data['github_username'] }}
+{% endif %}
+
+{% if 'SenNet Slack Workspace' in data['access_requests'] %}
+Email for SenNet Slack Workspace: {{ data['slack_username'] }}
+{% endif %}
+
+
+
+SenNet Member Registration and Profile

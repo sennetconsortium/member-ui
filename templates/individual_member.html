@@ -1,0 +1,104 @@
+{% extends "layouts/main_layout.html" %}
+{% block content %}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{ config['FLASK_APP_BASE_URI'] }}/members">All Members</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ data.first_name }} {{ data.last_name }}</li>
+  </ol>
+</nav>
+
+<div class="card">
+  <h5 class="card-header">Member Detail</h5>
+  <div class="card-body">
+Globus Username associated with registration/profile: {{ data.globus_username }} <br /><br />
+
+First name: {{ data.first_name }} <br />
+Last name: {{ data.last_name }} <br />
+Email: {{ data.email }} <br />
+Phone: {{ data.phone }} <br />
+
+Component: {{ data.component }} <br />
+{% if data.other_component %}
+Other Component: {{ data.other_component }} <br />
+{% endif %}
+
+Organization: {{ data.organization }} <br />
+{% if data.other_organization %}
+Other Rrganization: {{ data.other_organization }} <br />
+{% endif %}
+
+Role: {{ data.role }}<br />
+{% if data.other_role %}
+Other Role: {{ data.other_role }} <br />
+{% endif %}
+
+
+<br />
+SenNet service(s) access requested: <br />
+<ul>
+{% for req in data.access_requests_list %}
+<li>{{ req }} </li>
+{% endfor %}
+</ul>
+
+<br />
+
+{% if 'SenNet Data Via Globus' in data.access_requests %}
+Globus username to be used for SenNet Data group access: {{ data.globus_identity }} <br />
+{% endif %}
+
+{% if 'SenNet Google Drive Share' in data.access_requests %}
+Google account for SenNet Google Drive Share: {{ data.google_email }} <br />
+{% endif %}
+
+{% if 'SenNet GitHub Repository' in data.access_requests %}
+Github username: {{ data.github_username }} <br />
+{% endif %}
+
+{% if 'SenNet Slack Workspace' in data.access_requests %}
+Email for SenNet Slack Workspace: {{ data.slack_username }} <br />
+{% endif %}
+
+{% if 'protocols.io' in data.access_requests %}
+Email for protocols.io: {{ data.protocols_io_email }} <br />
+{% endif %}
+
+<br />
+{% if data.pm %}
+The user would like the following project manager to be copied on all communications: <br />
+Name: {{ data.pm_name }} <br />
+Email: {{ data.pm_email }} <br />
+{% else %}
+No project manager for this user
+{% endif %}
+<br /><br />
+
+<button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#delete_modal">Delete this member</button>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete member</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this member? This action will delete all the database records associated with this member.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <a href="{{ config['FLASK_APP_BASE_URI'] }}/delete_member/{{ data.globus_user_id }}" class="btn btn-danger">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+</div>
+
+
+{% endblock %}

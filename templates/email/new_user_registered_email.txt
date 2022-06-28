@@ -1,0 +1,64 @@
+SenNet new user registered.
+
+Globus Username associated with registration/profile: {{ data['globus_username'] }}
+
+Name: {{ data['first_name'] }} {{ data['last_name'] }}
+Email: {{ data['email'] }}
+Phone: {{ data['phone'] }}
+
+Component: {{ data['component'] }}
+{% if data['other_component'] %}
+Other Component: {{ data['other_component'] }}
+{% endif %}
+
+Organization: {{ data['organization'] }}
+{% if data['other_organization'] %}
+Other Organization: {{ data['other_organization'] }}
+{% endif %}
+
+Role: {{ data['role'] }}
+{% if data['other_role'] %}
+Other Role: {{ data['other_role'] }}
+{% endif %}
+
+SenNet service(s) access requested:
+
+{% for req in data['access_requests'] %}
+- {{ req }}
+{% endfor %}
+
+{% if 'SenNet Data Via Globus' in data['access_requests'] %}
+Globus username to be used for SenNet Data group access: {{ data['globus_identity'] }} <br />
+{% endif %}
+
+{% if 'SenNet Google Drive Share' in data['access_requests'] %}
+Google account for SenNet Google Drive Share: {{ data['google_email'] }}
+{% endif %}
+
+{% if 'SenNet GitHub Repository' in data['access_requests'] %}
+Github username: {{ data['github_username'] }}
+{% endif %}
+
+{% if 'SenNet Slack Workspace' in data['access_requests'] %}
+Email for SenNet Slack Workspace: {{ data['slack_username'] }}
+{% endif %}
+
+{% if 'protocols.io' in data['access_requests'] %}
+Email for protocols.io: {{ data['protocols_io_email'] }}
+{% endif %}
+
+<br />
+{% if data['pm'] %}
+The user would like the following project manager to be copied on all communications:
+Name: {{ data['pm_name'] }}
+Email: {{ data['pm_email'] }}
+{% else %}
+No project manager for this user
+{% endif %}
+
+
+URL to approve this user: {{ config['FLASK_APP_BASE_URI'] }}/registrations/{{ data['globus_user_id'] }}
+
+
+
+SenNet Member Registration and Profile

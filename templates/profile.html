@@ -1,0 +1,775 @@
+{% extends "layouts/main_layout.html" %}
+{% block content %}
+
+<h1>SenNet User Profile Update</h1>
+
+<script type="text/javascript">
+    $(function() {
+    	// Populate the data for these dropdown menus and checkboxes/radio buttons
+    	function populate_selections() {
+	        // Select the one user registered from the dropdown menu
+	        $('select#id_component option:contains("{{ data.component }}")').prop('selected', true);
+            // Also show the card detail
+            let target_card = $('div[data-name="{{ data.component }}"]').html();
+            $("#active_card").html(target_card);
+	        
+	        // Show the component detail card
+	        $('div[data-name="{{ data.component }}"]').show();
+
+	        $('select#id_organization option:contains("{{ data.organization }}")').prop('selected', true);
+	        $('select#id_role option:contains("{{ data.role }}")').prop('selected', true);
+
+	        // Project manager
+	        $('input[name="pm"][value="{{ data.pm }}"]').prop('checked', true);
+    	}
+
+        var biography_length_limit = 50000;
+        
+        // Hide these by default
+        $("#oth-cmpnt").hide();
+        $("#oth-org").hide();
+        $("#oth-role").hide();
+        $("#globus-identity").hide();
+        $("#google-email").hide();
+        $("#slack-username").hide();
+        $("#protocols-io-email").hide();
+        $("#github-username").hide();
+        $("div.pm-name").hide();
+        $("div.pm-email").hide();
+        $(".main-error-message").hide();
+        $("#pic_upload").hide();
+        $("#pic_url").hide();
+
+        populate_selections();
+
+        $("#id_component").change(function() {
+            let id = $(this).children("option:selected").val();
+            // All cards are hidden by default
+            if (id === '----') {
+                $("#active_card").html('');
+            } else {
+                let target_card = $("div[data-name='" + id + "']").html();
+                $("#active_card").html(target_card);
+
+                if(id==='Other'){ // other selected
+                    $("#oth-cmpnt").show();
+                } else {
+                    $("#id_other_component").val('');
+                    $("#oth-cmpnt").hide();
+                }
+            }
+        });
+
+        $("#id_organization").change(function() {
+            let id = $(this).children("option:selected").val();
+            if(id==='Other'){ // other selected
+                $("#oth-org").show();
+            } else {
+                $("#id_other_organization").val('');
+                $("#oth-org").hide();
+            }
+        });
+
+        
+
+        $("#id_role").change(function() {
+            let id = $(this).children("option:selected").val();
+            if(id==='Other'){ // other selected
+                $("#oth-role").show();
+            } else {
+                $("#id_other_role").val('');
+                $("#oth-role").hide();
+            }
+        });
+        
+        $("#id_access_requests_1").change(function() {
+            if (!this.checked){
+                $("#id_globus_identity").val('');
+            }
+            $("#globus-identity").toggle(this.checked);
+        });
+        $("#id_access_requests_3").change(function() {
+            if (!this.checked){
+                $("#id_google_email").val('');
+            }
+            $("#google-email").toggle(this.checked);
+        });
+        $("#id_access_requests_4").change(function() {
+            if (!this.checked){
+                $("#id_github_username").val('');
+            }
+            $("#github-username").toggle(this.checked);
+        });
+        $("#id_access_requests_5").change(function() {
+            if (!this.checked){
+                $("#id_slack_username").val('');
+            }
+            $("#slack-username").toggle(this.checked);
+        });
+        $("#id_access_requests_6").change(function() {
+            if (!this.checked){
+                $("#id_protocols_io_email").val('');
+            }
+            $("#protocols-io-email").toggle(this.checked);
+        });
+        
+        id = $("#id_component").children("option:selected").val();
+        if(id==='Other'){ // other selected
+            $("#oth-cmpnt").show();
+        } else {
+            $("#oth-cmpnt").hide();
+        }
+        id = $('#id_organization').children("option:selected").val();
+        if(id==='Other'){ // other selected
+            $("#oth-org").show();
+        } else {
+            $("#oth-org").hide();
+        }
+        id = $("#id_role").children("option:selected").val();
+        if(id==='Other'){ // other selected
+            $("#oth-role").show();
+        } else {
+            $("#oth-role").hide();
+        }
+        
+        // All users need access to "Collabration Portal"
+        // Disallow them to uncheck this option
+        // Disabled in HTML, no need to handle it in js here
+
+        if ($("#id_access_requests_1").prop('checked')){
+            $("#globus-identity").show();
+        }
+        if ($("#id_access_requests_3").prop('checked')){
+            $("#google-email").show();
+        }
+        if ($("#id_access_requests_4").prop('checked')){
+            $("#github-username").show();
+        }
+        if ($("#id_access_requests_5").prop('checked')){
+            $("#slack-username").show();
+        }
+        if ($("#id_access_requests_6").prop('checked')){
+            $("#protocols-io-email").show();
+        }
+
+        if($(":radio[id^='id_pm_0']").prop('checked')){
+            $("div.pm-name").show();
+            $("div.pm-email").show();
+        }
+        
+        // Profile image use exisiting, upload, pull from URL, or use default
+        let image_src = "{{ url_for('static', filename = 'images/default_profile.png') }}"
+        {% if data.profile_pic_url != '' %}
+        image_src = "{{ data.profile_pic_url }}"
+        {% endif %}
+
+        $('#profile_pic_option_existing').click(function() {
+            $("#pic_upload").hide();
+            $("#pic_url").hide();
+            // Clear the file upload and url
+            $('#id_photo').val('');
+            $('#id_photo_url').val('');
+            // Reset thumbnail
+            $('#profile_picture').attr('src', image_src);
+        });
+        $('#profile_pic_option_upload').click(function() {
+            $("#pic_upload").show();
+            $("#pic_url").hide();
+            // Clear the url
+            $('#id_photo_url').val('');
+            // Reset thumbnail
+            $('#profile_picture').attr('src', image_src);
+        });
+        $('#profile_pic_option_url').click(function() {
+            $("#pic_upload").hide();
+            $("#pic_url").show();
+            // Clear file
+            $('#id_photo').val('');
+            // Reset thumbnail
+            $('#profile_picture').attr('src', image_src);
+        });
+        $('#profile_pic_option_default').click(function() {
+            $("#pic_upload").hide();
+            $("#pic_url").hide();
+            // Clear file and url
+            $('#id_photo').val('');
+            $('#id_photo_url').val('');
+            // Reset thumbnail
+            $('#profile_picture').attr('src', "{{ url_for('static', filename = 'images/default_profile.png') }}");
+        });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#profile_picture').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function delay(callback, ms) {
+            var timer = 0;
+            return function() {
+                var context = this, args = arguments;
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                callback.apply(context, args);
+                }, ms || 0);
+            };
+        }
+        $("#id_photo").change(function() {
+            readURL(this);
+        });
+        $("#id_photo_url").keyup(delay(function(e) {
+            $('#profile_picture').attr('src', "{{ url_for('static', filename = 'images/default_profile.png') }}");
+            $('#profile_picture').attr('src', e.target.value);
+        }, 500));
+        $(":radio[id^='id_pm_']").change(function() {
+            if($(this).val() === 'Yes'){
+                $("div.pm-name").show();
+                $("div.pm-email").show();
+            } else {
+                $("#id_pm_name").val('');
+                $("div.pm-name").hide();
+                $("#id_pm_email").val('');
+                $("div.pm-email").hide();
+            }
+        });
+        $("#id_bio").keyup(function() {
+            if($(this).val().length > biography_length_limit) {
+                $("#id_bio").nextAll().remove();
+                $("#id_bio").addClass('is-invalid');
+                $("#id_bio").after("<div class='invalid-feedback'>Biography is too long. Please limit the length to " + biography_length_limit + " characters.</div>");
+            } else {
+                $("#id_bio").removeClass('is-invalid');
+                $("#id_bio").nextAll().remove();
+            }
+        })
+        
+        $("#registration-form").submit(function(e){
+            e.preventDefault();
+            var form = this;
+            valid = true;
+            $(form).find('.invalid-feedback').remove();
+            $(form).find('.is-invalid').removeClass('is-invalid');
+            if($.trim($("#id_email").val()) === ''){
+                valid = false;
+                $("#id_email").addClass('is-invalid');
+                $("#id_email").after("<div class='invalid-feedback'>Email is required.</div>");
+            }
+            if($.trim($("#id_phone").val()) === ''){
+                valid = false;
+                $("#id_phone").addClass('is-invalid');
+                $("#id_phone").after("<div class='invalid-feedback'>Phone is required.</div>");
+            }
+            if($.trim($("#id_first_name").val()) === ''){
+                valid = false;
+                $("#id_first_name").addClass('is-invalid');
+                $("#id_first_name").after("<div class='invalid-feedback'>First Name is required.</div>");
+            }
+            if($.trim($("#id_last_name").val()) === ''){
+                valid = false;
+                $("#id_last_name").addClass('is-invalid');
+                $("#id_last_name").after("<div class='invalid-feedback'>Last Name is required.</div>");
+            }
+            if($.trim($("#id_component").val()) === '----'){
+                valid = false;
+                $("#id_component").addClass('is-invalid');
+                $("#id_component").after("<div class='invalid-feedback'>Adward/Component is required.</div>");
+            }
+            if($.trim($("#id_component").val()) === 'Other' && $.trim($("#id_other_component").val()) === ''){
+                valid = false;
+                $("#id_other_component").addClass('is-invalid');
+                $("#id_other_component").after("<div class='invalid-feedback'>Award/Component is required.</div>");
+            }
+            if($.trim($("#id_organization").val()) === '----'){
+                valid = false;
+                $("#id_organization").addClass('is-invalid');
+                $("#id_organization").after("<div class='invalid-feedback'>Organization is required.</div>");
+            }
+            if($.trim($("#id_organization").val()) === 'Other' && $.trim($("#id_other_organization").val()) === ''){
+                valid = false;
+                $("#id_other_organization").addClass('is-invalid');
+                $("#id_other_organization").after("<div class='invalid-feedback'>Organization is required.</div>");
+            }
+            if($.trim($("#id_role").val()) === '----'){
+                valid = false;
+                $("#id_role").addClass('is-invalid');
+                $("#id_role").after("<div class='invalid-feedback'>Role is required.</div>");
+            }
+            if($.trim($("#id_role").val()) === 'Other' && $.trim($("#id_other_role").val()) === ''){
+                valid = false;
+                $("#id_other_role").addClass('is-invalid');
+                $("#id_other_role").after("<div class='invalid-feedback'>Role is required.</div>");
+            }
+
+            // Show users error if profile pic option is upload but no file, or url is selected but no valida url
+            if($("#profile_pic_option_upload").prop('checked') && ($("#id_photo").get(0).files.length === 0)) {
+                valid = false;
+                $("#id_photo").addClass('is-invalid');
+                $("#id_photo").after("<div class='invalid-feedback'>Please choose profile image to upload.</div>");
+            }
+            if($("#profile_pic_option_url").prop('checked') && ($("#id_photo_url").val() === '')) {
+                valid = false;
+                $("#id_photo_url").addClass('is-invalid');
+                $("#id_photo_url").after("<div class='invalid-feedback'>Please specify the image URL.</div>");
+            }
+
+            if($("#id_access_requests_1").prop('checked')) {
+                var globus_identity = $.trim($("#id_globus_identity").val())
+
+                if (globus_identity === '') {
+                    valid = false;
+                    $("#id_globus_identity").addClass('is-invalid');
+                    $("#id_globus_identity").after("<div class='invalid-feedback'>Globus identity is required.</div>");
+                }
+
+                if (globus_identity.endsWith("@globusid.org") || globus_identity.endsWith("@orcid.org") || globus_identity.endsWith("@gmail.com")) {
+                    valid = false;
+                    $("#id_globus_identity").addClass('is-invalid');
+                    $("#id_globus_identity").after("<div class='invalid-feedback'>ONLY institutional or eRA Commons Globus identities are acceptable.</div>");
+                }
+            }
+            if($("#id_access_requests_3").prop('checked') && $.trim($("#id_google_email").val()) === ''){
+                valid = false;
+                $("#id_google_email").addClass('is-invalid');
+                $("#id_google_email").after("<div class='invalid-feedback'>Google account is required.</div>");
+            }
+            if($("#id_access_requests_4").prop('checked') && $.trim($("#id_github_username").val()) === ''){
+                valid = false;
+                $("#id_github_username").addClass('is-invalid');
+                $("#id_github_username").after("<div class='invalid-feedback'>GitHub username is required.</div>");
+            }
+            if($("#id_access_requests_5").prop('checked') && $.trim($("#id_slack_username").val()) === ''){
+                valid = false;
+                $("#id_slack_username").addClass('is-invalid');
+                $("#id_slack_username").after("<div class='invalid-feedback'>Slack username is required.</div>");
+            }
+            if($("#id_access_requests_6").prop('checked') && $.trim($("#id_protocols_io_email").val()) === ''){
+                valid = false;
+                $("#id_protocols_io_email").addClass('is-invalid');
+                $("#id_protocols_io_email").after("<div class='invalid-feedback'>protocols.io account email is required.</div>");
+            }
+            if($("#id_bio").val().length > biography_length_limit){
+                valid = false;
+                $("#id_bio").addClass('is-invalid');
+                $("#id_bio").after("<div class='invalid-feedback'>Biography is too long. Please limit the length to " + biography_length_limit + " characters.</div>");
+            }
+            if($("#id_pm_0").prop('checked') && $.trim($("#id_pm_name").val()) === ''){
+                valid = false;
+                $("#id_pm_name").addClass('is-invalid');
+                $("#id_pm_name").after("<div class='invalid-feedback'>Project Manager's name is required.</div>");
+            }
+            if($("#id_pm_0").prop('checked') && $.trim($("#id_pm_email").val()) === ''){
+                valid = false;
+                $("#id_pm_email").addClass('is-invalid');
+                $("#id_pm_email").after("<div class='invalid-feedback'>Project Manager's email is required.</div>");
+            }
+            if(valid){
+                form.submit();
+            } else {
+                $(".main-error-message").show();
+            }
+        });
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+</script>
+
+<div class="row">
+    <div class="col-sm-12">
+        <form id="registration-form" method="POST" action="/profile" enctype="multipart/form-data">
+			<input type="hidden" name="csrf_token" value="{{ data.csrf_token }}">
+            <input type="hidden" name="connection_id" value="{{ data.connection_id }}">
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="first_name">First Name <span class="text-danger">*</span></label>
+                        
+                        <input type="text" name="first_name" value="{{ data.first_name }}" class="form-control" maxlength="100" id="id_first_name">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="last_name">Last Name <span class="text-danger">*</span></label>
+                        
+                        <input type="text" name="last_name" value="{{ data.last_name }}" class="form-control" maxlength="100" id="id_last_name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="email">Email address <span class="text-danger">*</span></label>
+                        <!-- Disallow edit email since it's used with globus login -->
+                        <input type="email" name="email" value="{{ data.email }}" class="form-control" id="id_email" disabled>
+                        <input type="hidden" name="email" value="{{ data.email }}">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="phone">Phone number <span class="text-danger">*</span></label>
+                        <input type="text" name="phone" value="{{ data.phone }}"class="form-control" maxlength="13" id="id_phone">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="component">Award/component <span class="text-danger">*</span></label>
+                        {% include 'component_selection.html' %}
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group" id="oth-cmpnt">
+                                            <label for="other_component">Component: What component are you with? <span class="text-danger">*</span></label>
+                                            <input type="text" name="other_component" value="{{ data.other_component}}" class="form-control" maxlength="100" id="id_other_component">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="organization">Organization <span class="text-danger">*</span></label>
+                                    {% include 'organization_selection.html' %}
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group" id="oth-org">
+                                            <label for="other_organization">Organization: What organization are you with? <span class="text-danger">*</span></label>
+                                            <input type="text" name="other_organization" value="{{ data.other_organization}}" class="form-control" maxlength="100" id="id_other_organization">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <!-- All hidden cards -->
+                        <div class="d-none">
+                            {% include 'component_cards.html' %}
+                        </div>
+
+                        <!-- Active card -->
+                        <div class="form-group" id="active_card"></div>
+
+
+                        <div class="form-group">
+                            <label for="role">Role in SenNet <span class="text-danger">*</span></label>
+                            {% include 'role_selection.html' %}
+
+</div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group" id="oth-role">
+                                    <label for="other_role">Role: What is your role in SenNet? <span class="text-danger">*</span></label>
+                                    <input type="text" name="other_role" value="{{ data.other_role }}" class="form-control" maxlength="100" id="id_other_role">
+                                   
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-xs-12 col-sm-3">
+                                {% if data.profile_pic_url == '' %}
+                                <img src="{{ url_for('static', filename = 'images/default_profile.png') }}" alt="Profile image" width="200" height="200" class="img-thumbnail" id="profile_picture">
+                                {% else %}
+                                <img src="{{ data.profile_pic_url }}" alt="Profile image" width="200" height="200" class="img-thumbnail" id="profile_picture">
+                                {% endif %}
+                                
+                            </div>
+                            
+                            <div class="col-xs-12 col-sm-9">
+                                <label for="file">Profile Picture: </label>
+
+                                {% if data.profile_pic_url == '' %}
+
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="profile_pic_option" id="profile_pic_option_default" value="default" checked>
+                                  <label class="form-check-label" for="profile_pic_option_default">
+                                    Use default image
+                                  </label>
+                                </div>
+
+                                {% else %}
+
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="profile_pic_option" id="profile_pic_option_existing" value="existing" checked>
+                                  <label class="form-check-label" for="profile_pic_option_existing">
+                                    Use existing image
+                                  </label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="profile_pic_option" id="profile_pic_option_default" value="default">
+                                  <label class="form-check-label" for="profile_pic_option_default">
+                                    Use default image
+                                  </label>
+                                </div>
+
+                                {% endif %}
+
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="profile_pic_option" id="profile_pic_option_upload" value="upload">
+                                  <label class="form-check-label" for="profile_pic_option_upload">
+                                    Upload image file
+                                  </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="profile_pic_option" id="profile_pic_option_url" value="url">
+                                  <label class="form-check-label" for="profile_pic_option_url">
+                                    Pull image from URL
+                                  </label>
+                                </div>
+                                
+
+                                <div id="pic_upload" class="form-photo">
+                                    <input type="file" name="photo" class="form-control" accept="image/*" id="id_photo">
+                                </div>
+
+                                <div id="pic_url" class="form-photo-url">
+                                    <input type="url" name="photo_url" class="form-control" placeholder="http://example.com/profile.png" id="id_photo_url">
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Note: disabled checkbox will not be posted -->
+                        <div class="row mb-2">
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="form-group">
+                                    <label for="access_requests">Which SenNet resources will you need to access?</label>
+                                    <div class="alert alert-warning" role="alert">
+Note: You can't edit resources that you've been approved to use.
+</div>
+
+<ul id="id_access_requests">
+
+<li><label for="id_access_requests_0"><input type="checkbox" name="access_requests" value="Member Portal" id="id_access_requests_0" disabled checked>
+        <input type="hidden" name="access_requests" value="Member Portal" />
+ Member Portal</label>
+
+</li>
+
+<li><label for="id_access_requests_1">
+{% if "SenNet Data Via Globus" in data.access_requests %}
+    <input type="checkbox" name="access_requests" value="SenNet Data Via Globus" id="id_access_requests_1" disabled checked />
+    <input type="hidden" name="access_requests" value="SenNet Data Via Globus" />
+{% else %}
+    <input type="checkbox" name="access_requests" value="SenNet Data Via Globus" id="id_access_requests_1" />
+{% endif %}
+
+ SenNet Data Via Globus</label>
+
+</li>
+
+<li><label for="id_access_requests_3">
+
+{% if "SenNet Google Drive Share" in data.access_requests %}
+    <input type="checkbox" name="access_requests" value="SenNet Google Drive Share" id="id_access_requests_3" disabled checked />
+    <input type="hidden" name="access_requests" value="SenNet Google Drive Share" />
+{% else %}
+    <input type="checkbox" name="access_requests" value="SenNet Google Drive Share" id="id_access_requests_3" />
+{% endif %}
+
+
+ SenNet Google Drive Share</label>
+
+</li>
+
+<li><label for="id_access_requests_4">
+{% if "SenNet GitHub Repository" in data.access_requests %}
+    <input type="checkbox" name="access_requests" value="SenNet GitHub Repository" id="id_access_requests_4" disabled checked />
+    <input type="hidden" name="access_requests" value="SenNet GitHub Repository" />
+{% else %}
+    <input type="checkbox" name="access_requests" value="SenNet GitHub Repository" id="id_access_requests_4" />
+{% endif %}
+
+        
+ SenNet GitHub Repository</label>
+
+</li>
+
+<li><label for="id_access_requests_5">
+{% if "SenNet Slack Workspace" in data.access_requests %}
+    <input type="checkbox" name="access_requests" value="SenNet Slack Workspace" id="id_access_requests_5" disabled checked />
+    <input type="hidden" name="access_requests" value="SenNet Slack Workspace" />
+{% else %}
+    <input type="checkbox" name="access_requests" value="SenNet Slack Workspace" id="id_access_requests_5" />
+{% endif %}
+
+ SenNet Slack Worksapce</label>
+
+</li>
+
+<li><label for="id_access_requests_6">
+{% if "protocols.io" in data.access_requests %}
+    <input type="checkbox" name="access_requests" value="protocols.io" id="id_access_requests_6" disabled checked />
+    <input type="hidden" name="access_requests" value="protocols.io" />
+{% else %}
+    <input type="checkbox" name="access_requests" value="protocols.io" id="id_access_requests_6" />
+{% endif %}
+
+ protocols.io</label>
+
+</li>
+
+</ul>
+                                   
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                            	<div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group form-group-sm" id="globus-identity">
+                                            <label for="globus_identity">Globus Identity (<span class="text-danger">ONLY institutional or eRA Commons Globus identities are acceptable</span>): <span class="text-danger">*</span> <a href="/find_globus_identity" target="_blank">How to find my Globus Identity?</a></label>
+                                             
+                                            {% if data.globus_identity %}
+                                            <input type="text" name="globus_identity" value="{{ data.globus_identity }}" class="form-control" maxlength="200" id="id_globus_identity" disabled>
+                                            <input type="hidden" name="globus_identity" value="{{ data.globus_identity }}">
+                                            {% else %}
+                                            <input type="text" name="globus_identity" value="{{ data.globus_identity }}" class="form-control" maxlength="200" id="id_globus_identity">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group form-group-sm" id="google-email">
+                                            <label for="google_email">Google account email address: <span class="text-danger">*</span></label>
+                                            
+                                            {% if data.google_email %}
+                                            <input type="email" name="google_email" value="{{ data.google_email }}" class="form-control" maxlength="200" id="id_google_email" disabled>
+                                            <input type="hidden" name="google_email" value="{{ data.google_email }}">
+                                            {% else %}
+                                            <input type="email" name="google_email" value="{{ data.google_email }}" class="form-control" maxlength="200" id="id_google_email">
+                                            {% endif %}
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group form-group-sm" id="github-username">
+                                            <label for="github_username">GitHub username: <span class="text-danger">*</span></label>
+                                            {% if data.github_username %}
+                                            <input type="text" name="github_username" value="{{ data.github_username }}" class="form-control" maxlength="200" id="id_github_username" disabled>
+                                            <input type="hidden" name="github_username" value="{{ data.github_username }}">
+                                            {% else %}
+                                            <input type="text" name="github_username" value="{{ data.github_username }}" class="form-control" maxlength="200" id="id_github_username">
+                                            {% endif %}
+
+    
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group form-group-sm" id="slack-username">
+                                            <label for="slack_username">Email address for Slack invitation: <span class="text-danger">*</span></label>
+                                            {% if data.slack_username %}
+                                            <input type="text" name="slack_username" value="{{ data.slack_username }}" class="form-control" maxlength="200" id="id_slack_username" disabled>
+                                            <input type="hidden" name="slack_username" value="{{ data.slack_username }}">
+                                            {% else %}
+                                            <input type="text" name="slack_username" value="{{ data.slack_username }}" class="form-control" maxlength="200" id="id_slack_username">
+                                            {% endif %}
+
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group form-group-sm" id="protocols-io-email">
+                                            <label for="protocols_io_email">Email address for protocols.io: <span class="text-danger">*</span></label>
+                                            {% if data.protocols_io_email %}
+                                            <input type="text" name="protocols_io_email" value="{{ data.protocols_io_email }}" class="form-control" maxlength="200" id="id_protocols_io_email" disabled>
+                                            <input type="hidden" name="protocols_io_email" value="{{ data.protocols_io_email }}">
+                                            {% else %}
+                                            <input type="text" name="protocols_io_email" value="{{ data.protocols_io_email }}" class="form-control" maxlength="200" id="id_protocols_io_email">
+                                            {% endif %}
+
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+		                            <label for="orcid">What is your ORCID ID?</label>
+		                            <input type="text" name="orcid" value="{{ data.orcid }}" class="form-control" maxlength="100" id="id_orcid">
+		                            
+		                        </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+		                            <label for="website">URL of a personal profile page to share</label>
+		                            <input type="url" name="website" value="{{ data.website }}" class="form-control" maxlength="500" id="id_website">
+		                            
+		                        </div>
+                            </div>
+                        </div>
+
+                        
+                        <div class="form-group">
+                            <label for="bio">Biography: Please provide any biographical information that you'd like to share. This information may be shared publicly.</label>
+                            <textarea name="bio" cols="40" rows="6" class="form-control" id="id_bio">{{ data.bio}}
+</textarea>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="pm">Is there a project manager who should be copied on all communications to you?</label>
+                            <ul id="id_pm">
+    <li><label for="id_pm_0"><input type="radio" name="pm" value="Yes" id="id_pm_0">
+ Yes</label>
+
+</li>
+    <li><label for="id_pm_1"><input type="radio" name="pm" value="No" id="id_pm_1">
+ No</label>
+
+</li>
+</ul>
+                        </div>
+
+
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group pm-name">
+                                    <label for="pm_name">Project Manager's Name <span class="text-danger">*</span></label>
+                                    <input type="text" name="pm_name" value="{{ data.pm_name }}" class="form-control" maxlength="100" id="id_pm_name">
+                                    
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group pm-email">
+                                    <label for="pm_email">Project Manager's Email <span class="text-danger">*</span></label>
+                                    <input type="email" name="pm_email" value="{{ data.pm_email }}" class="form-control" maxlength="100" id="id_pm_email">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-danger main-error-message">
+                            There are errors, please correct the fields above.
+                        </div>
+
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-lg">Update</button>
+        </form>
+
+    </div>
+</div>
+
+
+{% endblock %}

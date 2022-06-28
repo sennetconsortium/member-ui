@@ -1,0 +1,46 @@
+# App name and deployment URI
+FLASK_APP_NAME = 'SenNet Member Registration And Profile'
+# Works regardless the trailing slash /
+FLASK_APP_BASE_URI = 'http://localhost:5000'
+
+# Flask app session key
+SECRET_KEY = ''
+
+# Globus app client ID and secret
+GLOBUS_APP_ID = ''
+GLOBUS_APP_SECRET = ''
+
+# Google reCAPTCHA v2 ("I'm not a robot" Checkbox) keys
+GOOGLE_RECAPTCHA_SITE_KEY = ''
+GOOGLE_RECAPTCHA_SECRET_KEY = ''
+GOOGLE_RECAPTCHA_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify'
+
+# DB connection ettings
+# Default works for local development with docker 
+WP_DB_TABLE_PREFIX = 'wp_u2t56h_'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:123@member-mysql/hm_wpdb'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+# IMAGE DIRECTORIES, works regardless the trailing slash /
+# Default values work for docker deployment
+STAGE_USER_IMAGE_DIR = '/usr/src/app/member-ui-stage-images/'
+CONNECTION_IMAGE_DIR = '/usr/src/app/wp-connections-images/'
+
+# Prefix for the Connections meta fields
+CONNECTION_META_KEY_PREFIX = 'sn_'
+
+# Base URL for displaying connection profile images
+CONNECTION_IMAGE_URL = 'https://sennetconsortium.org/wp-content/uploads/connections-images/'
+
+# Email settings for Flask-Mail extension
+# For gmail, need to enable less secure app access under Google Account->Security
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 587
+MAIL_USE_TLS = True
+MAIL_USERNAME = 'your gmail address'
+MAIL_PASSWORD = 'your gmail password'
+MAIL_DEFAULT_SENDER = ('SenNet Member Registration And Profile', 'your gmail address')
+MAIL_DEBUG = False
+
+# Admin emails, not part of Flask-Mail configuration
+MAIL_ADMIN_LIST = ['admin@sennetconsortium.org']

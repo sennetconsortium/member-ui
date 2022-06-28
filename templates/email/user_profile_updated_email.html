@@ -1,0 +1,64 @@
+The following SenNet user has updated access requests list:<br /><br />
+
+Name: {{ data['first_name'] }} {{ data['last_name'] }} <br />
+Email: {{ data['email'] }} <br />
+
+<br />
+Old access requests:<br />
+
+<ul>
+{% for old_req in old_access_requests_data['access_requests'] %}
+<li>{{ old_req }} </li>
+{% endfor %}
+</ul>
+
+{% if 'SenNet Data Via Globus' in old_access_requests_data['access_requests'] %}
+Globus username to be used for SenNet Data group access: {{ old_access_requests_data['globus_identity'] }} <br />
+{% endif %}
+
+{% if 'SenNet Google Drive Share' in old_access_requests_data['access_requests'] %}
+Google account for SenNet Google Drive Share: {{ old_access_requests_data['google_email'] }} <br />
+{% endif %}
+
+{% if 'SenNet GitHub Repository' in old_access_requests_data['access_requests'] %}
+Github username: {{ old_access_requests_data['github_username'] }} <br />
+{% endif %}
+
+{% if 'SenNet Slack Workspace' in old_access_requests_data['access_requests'] %}
+Email for SenNet Slack Workspace: {{ old_access_requests_data['slack_username'] }} <br />
+{% endif %}
+
+{% if 'protocols.io' in old_access_requests_data['access_requests'] %}
+Email for protocols.io: {{ old_access_requests_data['protocols_io_email'] }} <br />
+{% endif %}
+
+<br />
+
+New access requests:<br />
+
+<ul>
+{% for new_req in data['access_requests'] %}
+<li>{{ new_req }} </li>
+{% endfor %}
+</ul>
+
+{% if 'SenNet Data Via Globus' in data['access_requests'] %}
+Globus username to be used for SenNet Data group access: {{ data['globus_identity'] }} <br />
+{% endif %}
+
+{% if 'SenNet Google Drive Share' in data['access_requests'] %}
+Google account for SenNet Google Drive Share: {{ data['google_email'] }} <br />
+{% endif %}
+
+{% if 'SenNet GitHub Repository' in data['access_requests'] %}
+Github username: {{ data['github_username'] }} <br />
+{% endif %}
+
+{% if 'SenNet Slack Workspace' in data['access_requests'] %}
+Email for SenNet Slack Workspace: {{ data['slack_username'] }} <br />
+{% endif %}
+
+<br />
+
+<br />
+SenNet Member Registration and Profile

@@ -1,0 +1,43 @@
+{% extends "layouts/main_layout.html" %}
+{% block content %}
+
+<h1>All Registrations</h1>
+
+<p>{{data.stage_users|length}} pending registration(s)</p>
+
+{% if data.stage_users|length > 0 %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Status</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Registration Date (UTC)</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% for stage_user in data.stage_users %}
+	   <tr>
+      <th scope="row"><a href="{{ config['FLASK_APP_BASE_URI'] }}/registrations/{{ stage_user.globus_user_id }}" title="Click to view registration detail">{{ loop.index }}</a></th>
+      <td>
+      {% if stage_user.deny %}
+      <span class="text-danger">Denied</span>
+      {% else %}
+      <span class="text-success">New</span>
+      {% endif %}
+      </td>
+      <td>{{ stage_user.first_name }}</td>
+      <td>{{ stage_user.last_name }}</td>
+      <td>{{ stage_user.email }}</td>
+      <td>{{ stage_user.created_at.strftime('%m/%d/%Y %H:%M:%S') }}</td>
+    </tr>
+	{% endfor %}
+  </tbody>
+</table>
+
+{% endif %}
+
+{% endblock %}

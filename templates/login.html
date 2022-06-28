@@ -1,0 +1,23 @@
+{% extends "layouts/login_layout.html" %}
+{% block content %}
+<div class="alert alert-info" role="alert">
+<h1>SenNet Member Registration and Profile Login</h1>
+<p>
+This is the portal to register and create a new SenNet account. User authentication is required. 
+</p>
+
+<p>
+Please click the button below and you will be redirected to the Globus login page.
+There you can login with your institutional credentials. </p>
+
+<p>
+Once you are authenticated and authorized you'll be redirecting back to this site. If you are a new member, you can fill in the registration form and create a new account. Exisiting members can update profile information via this tool as well.
+</p>
+
+<hr />
+
+<a class="btn btn-primary btn-lg" href="{{ config['FLASK_APP_BASE_URI'] }}/login">
+Login or create an account with your institutional credentials via Globus
+</a>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SenNet User Registration and Profile</title>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/app.css') }}">
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/fontawesome-all.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+
+</head>
+
+<body id="body">
+
+<header id="header" class="navbar navbar-expand-lg navbar-light">
+<nav class="container">
+<a class="navbar-brand" href="/">
+<img src="https://sennetconsortium.org/wp-content/uploads/2021/10/Untitled3.png" width="189" height="51" class="d-inline-block align-top"
+alt="SenNet logo" /></a>
+
+<div class="collapse navbar-collapse">
+<ul class="navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="https://sennetconsortium.org/" target="_blank">Member Portal</a>
+</li>
+{% if session['isAdmin'] %}
+<li class="nav-item">
+<a class="nav-link" href="{{ config['FLASK_APP_BASE_URI'] }}/registrations">Registrations</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="{{ config['FLASK_APP_BASE_URI'] }}/members">Members</a>
+</li>
+{% endif %}
+</ul>
+</div>
+
+<div class="float-right">
+<span class="username">{{data.username}}</span>
+<a href="{{ config['FLASK_APP_BASE_URI'] }}/logout" class="btn btn btn-outline-danger">Logout</a>
+</div>
+</nav>
+</header>
+
+<div class="page-content">
+<div id="content" class="container">
+
+{% block content %}{% endblock %}
+</div>
+</div>
+
+</body>
+</html>

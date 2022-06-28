@@ -1,0 +1,8 @@
+# Issue the following SQL query in MySQL to populate 'HuBMAP Data Via Globus' for members who already have accees to HuBMAP data:
+
+
+Update `wp_connections_meta` 
+SET 
+    meta_value = REPLACE(meta_value,
+        'Sample Data Portal',
+        'HuBMAP Data Via Globus');

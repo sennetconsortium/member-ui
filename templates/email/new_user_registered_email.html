@@ -1,0 +1,77 @@
+SenNet new user registered. <br /><br />
+
+Globus Username associated with registration/profile: {{ data['globus_username'] }} <br />
+
+Name: {{ data['first_name'] }} {{ data['last_name'] }} <br />
+Email: {{ data['email'] }} <br />
+Phone: {{ data['phone'] }} <br />
+
+Component: {{ data['component'] }} <br />
+{% if data['other_component'] %}
+Other Component: {{ data['other_component'] }} <br />
+{% endif %}
+
+Organization: {{ data['organization'] }} <br />
+{% if data['other_organization'] %}
+Other Organization: {{ data['other_organization'] }} <br />
+{% endif %}
+
+Role: {{ data['role'] }}<br />
+{% if data['other_role'] %}
+Other Role: {{ data['other_role'] }} <br />
+{% endif %}
+
+{#
+<br />
+Working group(s): <br />
+<ul>
+{% for grp in data['working_group'] %} 
+<li>{{ grp }} </li>
+{% endfor %}
+</ul>
+#}
+
+<br />
+SenNet service(s) access requested: <br />
+<ul>
+{% for req in data['access_requests'] %}
+<li>{{ req }} </li>
+{% endfor %}
+</ul>
+
+<br />
+
+{% if 'SenNet Data Via Globus' in data['access_requests'] %}
+Globus username to be used for SenNet Data group access: {{ data['globus_identity'] }} <br />
+{% endif %}
+
+{% if 'SenNet Google Drive Share' in data['access_requests'] %}
+Google account for SenNet Google Drive Share: {{ data['google_email'] }} <br />
+{% endif %}
+
+{% if 'SenNet GitHub Repository' in data['access_requests'] %}
+Github username: {{ data['github_username'] }} <br />
+{% endif %}
+
+{% if 'SenNet Slack Workspace' in data['access_requests'] %}
+Email for SenNet Slack Workspace: {{ data['slack_username'] }} <br />
+{% endif %}
+
+{% if 'protocols.io' in data['access_requests'] %}
+Email for protocols.io: {{ data['protocols_io_email'] }} <br />
+{% endif %}
+
+<br />
+{% if data['pm'] %}
+The user would like the following project manager to be copied on all communications: <br />
+Name: {{ data['pm_name'] }} <br />
+Email: {{ data['pm_email'] }} <br />
+{% else %}
+No project manager for this user
+{% endif %}
+<br /><br />
+
+URL to approve this user: <a href="{{ config['FLASK_APP_BASE_URI'] }}/registrations/{{ data['globus_user_id'] }}">{{ config['FLASK_APP_BASE_URI'] }}/registrations/{{ data['globus_user_id'] }}</a><br />
+
+<br />
+SenNet Member Registration and Profile

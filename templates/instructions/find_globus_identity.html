@@ -1,0 +1,14 @@
+{% extends "layouts/main_layout.html" %}
+{% block content %}
+
+<h1>How to find Globus Identity</h1>
+
+<p>To find your Globus identity/username follow the following link, make sure you log in with your institutional (organizational) login.  If your institution isn’t in the list of choices on the Globus login page you must use an NIH eRA Commons login, other logins such as Globus, ORCID or Google cannot be used to access the SenNet data stores.</p>
+
+<h1 class="text-center mb-3 pb-4"><a href="https://app.globus.org/account/identities" class="btn btn-primary btn-lg" target="_blank">Globus Identity Page</a></h1>
+
+<p>Once logged into the identity page your Globus username is listed in the IDENTITY column of your primary user as shown below. If you have more than one linked account and your institutional account isn’t the primary follow the <a href="/unlink_globus_identities" target="_blank">instructions to unlink your institutional account</a>. If your institutional address isn't listed on the Globus identity page log out of Globus and back in again, by selecting the Logout link near the top right of the Globus identity page.</p>
+
+<img src="{{ url_for('static', filename = 'images/find_globus_identity.png') }}" width="512" class="img-fluid rounded d-block" alt="Globus Identity" />
+
+{% endblock %}

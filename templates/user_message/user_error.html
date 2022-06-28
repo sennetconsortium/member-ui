@@ -1,0 +1,12 @@
+{% extends "layouts/main_layout.html" %}
+{% block content %}
+<div class="row">
+<div class="col-sm-8 offset-sm-2">
+<div class="alert alert-danger" role="alert">
+{{ data.message | safe }}
+
+Please contact <a href="mailto:help@sennetconsortium.org">help@sennetconsortium.org</a> for help resolving the problem.
+</div>
+</div>
+</div>
+{% endblock %}

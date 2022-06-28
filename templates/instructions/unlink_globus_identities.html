@@ -1,0 +1,18 @@
+{% extends "layouts/main_layout.html" %}
+{% block content %}
+
+<h1>How to unlink a Globus Identity</h1>
+
+<p>To unlink a Globus account:</p>
+
+<ul>
+	<li>1. Log into the <a href="https://app.globus.org/account/identities" target="_blank">Globus Identity Page</a></li>
+	<li>2. Select the Manage Identities link on that page</li>
+	<li>3. Select the "X" next to the account that you want to unlink on the next page</li>
+</ul>
+
+<img src="{{ url_for('static', filename = 'images/unlink_globus_identities_1.png') }}" width="512" class="img-fluid rounded d-block mb-3 pb-3" alt="Unlink Globus Identity 1" />
+
+<img src="{{ url_for('static', filename = 'images/unlink_globus_identities_2.png') }}" width="512" class="img-fluid rounded d-block" alt="Unlink Globus Identity 2" />
+
+{% endblock %}

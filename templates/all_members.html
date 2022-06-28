@@ -1,0 +1,35 @@
+{% extends "layouts/main_layout.html" %}
+{% block content %}
+
+<h1>All Members (not including the Administrators)</h1>
+
+<p>{{data.members|length}} members</p>
+
+{% if data.members|length > 0 %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Organization</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% for member in data.members %}
+	<tr>
+      <th scope="row"><a href="{{ config['FLASK_APP_BASE_URI'] }}/members/{{ member.globus_user_id }}" title="Click to view member detail">{{ loop.index }}</a></th>
+      <td>{{ member.first_name }}</td>
+      <td>{{ member.last_name }}</td>
+      <td>{{ member.email }}</td>
+      <td>{{ member.organization }}</td>
+    </tr>
+	{% endfor %}
+  </tbody>
+</table>
+
+{% endif %}
+
+{% endblock %}

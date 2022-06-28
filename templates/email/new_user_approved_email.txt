@@ -1,0 +1,10 @@
+Dear {{ data.first_name }} {{ data.last_name }},
+
+Your SenNet Consortium account registraiton has been approved. You may update your profile information by visiting {{ config['FLASK_APP_BASE_URI'] }}.
+
+If you requested access to other resources you will be notified separately when access has been granted.
+
+Thank you!
+
+
+SenNet Member Registration and Profile

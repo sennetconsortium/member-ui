@@ -1,0 +1,8 @@
+Dear {{ data.first_name }} {{ data.last_name }},
+
+We are sorry to inform you that your SenNet Consortium registration has been denied. Please contact help@hubmapconsortium.org for help resolving the problem.
+
+Thank you!
+
+
+SenNet Member Registration and Profile
