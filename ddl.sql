@@ -29,8 +29,7 @@ CREATE TABLE `stage_user` (
   `created_at` timestamp,
   `deny` boolean DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `globus_user_id` (`globus_user_id`),
-  UNIQUE KEY `email` (`email`)
+  UNIQUE KEY `globus_user_id` (`globus_user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `user_connection` (
