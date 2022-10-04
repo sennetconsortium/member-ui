@@ -64,7 +64,7 @@ class StageUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     globus_user_id = db.Column(db.String(100), unique=True)
     globus_username = db.Column(db.String(200))
-    email = db.Column(db.String(200), unique=True)
+    email = db.Column(db.String(200))
     first_name = db.Column(db.String(200))
     last_name = db.Column(db.String(200))
     component = db.Column(db.String(200))
