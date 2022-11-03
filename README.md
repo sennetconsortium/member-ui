@@ -53,6 +53,11 @@ export FLASK_APP=app.py
 export FLASK_ENV=development
 python3 -m flask run -p 5005
 ````
+## Troubleshoot 
+### MacOS
+If you run into problems installing `cffi`, (like `error: legacy-install-failure`) first be sure to install:
+`brew install pkg-config libffi`
+Then run `pip install cffi`. You may need to unlink before running this install with: `xcode-select --install` & `brew unlink pkg-config`.
 
 ## Deployment
 

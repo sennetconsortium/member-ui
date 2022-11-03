@@ -1998,6 +1998,56 @@ def unlink_globus_identities():
 
     return render_template('instructions/unlink_globus_identities.html', data = context)
 
+# Get a list of all approved members (not including admins)
+def get_all_members_with_all_info():
+    members = list()
+    # Order members by ID DESC
+    wp_users = WPUser.query.order_by(WPUser.id.desc()).all()
+    for user in wp_users:
+        # Check if this target user is a member (capabilities will be empty dict if not member role)
+        capabilities = next((meta for meta in user.metas if (meta.meta_key == wp_db_table_prefix + 'capabilities') and ('member' in meta.meta_value)), {})
+        if capabilities:
+            # Use this check in case certain user doesn't have the connection info
+            if user.connection:
+                # Note user.connection returns a list of connections (should be only one though)
+                connection_data = user.connection[0]
+                # Also get the globus_user_id
+                wp_user_meta_globus_user_id = WPUserMeta.query.filter(WPUserMeta.user_id == user.id, WPUserMeta.meta_key.like('openid-connect-generic-subject-identity')).first()
+
+                # Construct a new member dict and add to the members list
+                member = {
+                    'globus_user_id': wp_user_meta_globus_user_id.meta_value,
+                    'first_name': connection_data.first_name,
+                    'last_name': connection_data.last_name,
+                    'email': user.user_email,
+                    'organization': connection_data.organization
+                }
+
+                members.append(member)
+
+    return members
+@app.route("/downloads/members", methods=['GET'])
+@login_required
+# @admin_required
+def downloads_profile():
+    context = {
+        'isAuthenticated': True,
+        'username': session['name']
+    }
+    members = get_all_members_with_all_info()
+    cvs = 'Globus Username Associated, Name, Email, Component, PM, PM email, Role, SenNet Data Via Globus, Gdrive account, GitHub, Slack, protocols.io  \n'
+    # users = StageUser.query.all()
+    for member in members:
+        i = StageUser.query.filter(StageUser.globus_user_id == member.get('globus_user_id'))
+        # cvs += f"{i.globus_username},\"First name: {i.first_name}\nLast name:{i.last_name}\",{i.email},"
+        # cvs += f"{i.component},{i.pm_name},{i.pm_email},{i.role},{i.globus_identity},{i.google_email},{i.github_username},{i.slack_username},{i.protocols_io_email}\n"
+
+
+    r = Response(cvs, status=200, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    r.headers["Content-Type"] = 'text/csv'
+    r.headers['Content-Disposition'] = 'attachment; filename="sennet-members.csv"'
+
+    return r
 
 # Run Server
 if __name__ == "__main__":
