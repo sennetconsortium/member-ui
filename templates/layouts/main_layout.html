@@ -5,11 +5,13 @@
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/app.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/toastify.min.css') }}">
 
 <script type="text/javascript" src="{{ url_for('static', filename='js/fontawesome-all.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-
+    <script type="text/javascript" src="{{ url_for('static', filename='js/toastify-js.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
 </head>
 
 <body id="body">
@@ -32,7 +34,14 @@ alt="SenNet logo" /></a>
 <li class="nav-item">
 <a class="nav-link" href="{{ config['FLASK_APP_BASE_URI'] }}/members">Members</a>
 </li>
+    <li class="nav-item">
+        <a class="nav-link state-element" id="js-btn--downloads-members" href="#" data-js-apicall="{{ config['FLASK_APP_BASE_URI'] }}/downloads/members" data-js-toastit="Your download will begin shortly ...">
+            Download Member Info
+            <span class="position-absolute spinner"><span class="spinner__main spinner__main--forText" aria-label="Loading your request.">...</span></span>
+        </a>
+    </li>
 {% endif %}
+
 </ul>
 </div>
 
