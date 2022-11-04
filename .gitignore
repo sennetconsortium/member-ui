@@ -2,3 +2,4 @@
 .idea
 venv-member-ui
 instance/app.cfg
+.DS_Store
