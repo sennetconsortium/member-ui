@@ -1998,6 +1998,10 @@ def unlink_globus_identities():
 
     return render_template('instructions/unlink_globus_identities.html', data = context)
 
+def get_connection_keys():
+    return ['other_component', 'other_organization', 'other_role', 'access_requests',
+            'globus_identity', 'google_email', 'github_username', 'slack_username', 'protocols_io_email',
+            'website', 'orcid', 'pm', 'pm_name', 'pm_email']
 # Get a list of all approved members (not including admins)
 def get_all_members_with_all_info():
     members = list()
@@ -2019,9 +2023,29 @@ def get_all_members_with_all_info():
                     'globus_user_id': wp_user_meta_globus_user_id.meta_value,
                     'first_name': connection_data.first_name,
                     'last_name': connection_data.last_name,
-                    'email': user.user_email,
-                    'organization': connection_data.organization
+                    'organization': connection_data.organization,
+                    'component': connection_data.department,
+                    'role': connection_data.title,
+                    'bio': connection_data.bio,
+                    'email': user.user_email.lower()
                 }
+                keys = get_connection_keys()
+                obj = None
+                try:
+                    globus_user = next((meta for meta in user.metas if meta.meta_key == 'globus_username'), {'meta_value': ''})
+                    if globus_user is not None:
+                        member['globus_username'] = globus_user['meta_value'] if isinstance(globus_user, (dict)) else globus_user.meta_value
+                    for k in keys:
+                        if k == 'pm':
+                            obj = next((meta for meta in connection_data.metas if meta.meta_key == connection_meta_key_prefix + 'pm'), {'meta_value': ''})
+                            if obj is not None:
+                                member['pm'] = 'Yes' if obj.meta_value == '1' else 'No'
+                        else:
+                            obj = next((meta for meta in connection_data.metas if meta.meta_key == connection_meta_key_prefix + k), {'meta_value': ''})
+                            if obj is not None:
+                                member[k] = obj['meta_value'] if isinstance(obj, (dict)) else obj.meta_value
+                except:
+                    print(user.user_email)
 
                 members.append(member)
 
@@ -2038,10 +2062,9 @@ def downloads_profile():
     cvs = 'Globus Username Associated, Name, Email, Component, PM, PM email, Role, SenNet Data Via Globus, Gdrive account, GitHub, Slack, protocols.io  \n'
     # users = StageUser.query.all()
     for member in members:
-        i = StageUser.query.filter(StageUser.globus_user_id == member.get('globus_user_id'))
-        # cvs += f"{i.globus_username},\"First name: {i.first_name}\nLast name:{i.last_name}\",{i.email},"
-        # cvs += f"{i.component},{i.pm_name},{i.pm_email},{i.role},{i.globus_identity},{i.google_email},{i.github_username},{i.slack_username},{i.protocols_io_email}\n"
-
+        i = StageUser(member)
+        cvs += f"{i.globus_username},\"First name: {i.first_name}\nLast name:{i.last_name}\",{i.email},"
+        cvs += f"{i.component},{i.pm_name},{i.pm_email},{i.role},{i.globus_identity},{i.google_email},{i.github_username},{i.slack_username},{i.protocols_io_email}\n"
 
     r = Response(cvs, status=200, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     r.headers["Content-Type"] = 'text/csv'
