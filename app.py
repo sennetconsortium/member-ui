@@ -2045,8 +2045,9 @@ def get_all_members_with_all_info():
                             obj = next((meta for meta in connection_data.metas if meta.meta_key == connection_meta_key_prefix + k), {'meta_value': ''})
                             if obj is not None:
                                 member[k] = obj['meta_value'] if isinstance(obj, (dict)) else obj.meta_value
-                except:
-                    print(user.user_email)
+                except Exception as e:
+                    print(e)
+                    # print(user.user_email)
 
                 members.append(member)
 
