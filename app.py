@@ -2060,7 +2060,7 @@ def downloads_profile():
     }
     members = get_all_members_with_all_info()
     cvs = 'Globus Username Associated, Name, Email, Component, PM, PM email, Role, SenNet Data Via Globus, Gdrive account, GitHub, Slack, protocols.io  \n'
-    # users = StageUser.query.all()
+
     for member in members:
         i = StageUser(member)
         cvs += f"{i.globus_username},\"First name: {i.first_name}\nLast name:{i.last_name}\",{i.email},"
