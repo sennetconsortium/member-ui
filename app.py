@@ -2051,6 +2051,7 @@ def get_all_members_with_all_info():
                 members.append(member)
 
     return members
+
 @app.route("/downloads/members", methods=['GET'])
 @login_required
 @admin_required
