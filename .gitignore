@@ -3,3 +3,4 @@
 venv-member-ui
 instance/app.cfg
 .DS_Store
+__pycache__/
