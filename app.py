@@ -2002,6 +2002,7 @@ def get_connection_keys():
     return ['other_component', 'other_organization', 'other_role', 'access_requests',
             'globus_identity', 'google_email', 'github_username', 'slack_username', 'protocols_io_email',
             'website', 'orcid', 'pm', 'pm_name', 'pm_email']
+
 # Get a list of all approved members (not including admins)
 def get_all_members_with_all_info():
     members = list()
@@ -2052,7 +2053,7 @@ def get_all_members_with_all_info():
     return members
 @app.route("/downloads/members", methods=['GET'])
 @login_required
-# @admin_required
+@admin_required
 def downloads_profile():
     context = {
         'isAuthenticated': True,
