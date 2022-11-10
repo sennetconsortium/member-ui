@@ -42,7 +42,8 @@ function Apps() {
     let ApiCall;
     ApiCall = (function() {
         function ApiCall(el, options) {
-            this.isBusy = false
+            this.isBusy = false;
+            this.options = options;
             this.el = $(el);
             this.events();
             return this;
@@ -72,7 +73,7 @@ function Apps() {
             const url = $el.addClass(classNames.busy).data('js-apicall')
             $.ajax({
                 type: "GET",
-                url: "/downloads/members",
+                url: url || this.options.url,
                 xhrFields: {
                     responseType: 'blob'
                 },
