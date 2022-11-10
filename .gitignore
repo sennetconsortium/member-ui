@@ -4,3 +4,5 @@ venv-member-ui
 instance/app.cfg
 .DS_Store
 __pycache__/
+static-src/node_modules
+static-src/package-lock.json

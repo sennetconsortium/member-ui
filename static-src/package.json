@@ -1,0 +1,32 @@
+{
+  "name": "member-ui",
+  "version": "1.0.0",
+  "description": "Member UI",
+  "main": "index.js",
+  "scripts": {
+    "js": "coffee --transpile --join app.min.js -o ../static/js  -cw ./js/App.coffee ./js/*.coffee ./js/apps.coffee"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "semi": false,
+    "tabWidth": 4,
+    "trailingComma": "none"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sennetconsortium/member-ui.git"
+  },
+  "author": "dbmit.pitt.edu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sennetconsortium/member-ui/issues"
+  },
+  "homepage": "https://github.com/sennetconsortium/member-ui#readme",
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "coffeescript": "^2.7.0",
+    "prettier": "^2.7.1"
+  }
+}
