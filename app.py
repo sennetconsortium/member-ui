@@ -2061,7 +2061,7 @@ def get_all_users_with_all_info():
 
 def format_user_entry(val, other):
     if val == 'Other':
-        return f"Other: {other}"
+        return f"\"Other: {other}\""
     else:
         return val
 
