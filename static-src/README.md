@@ -1,5 +1,5 @@
 # Client Side Static Source Files
-Facilitates building of custom plugins and apps that can be shared across templates and/or pages.
+Facilitates building of custom plugins and JS apps that can be shared across templates and/or pages.
 
 ## JS 
 ### Install 
@@ -8,9 +8,9 @@ cd static-src
 npm i .
 ```
 ### Development
-This will watch all `.coffee` files and build to `static/js/app.js`
+This will watch all `.coffee` files and build to `static/js/app.min.js`
 ```
-npm run js
+npm run dev
 ```
 Currently just minifies the js to `static/js/app.min.js`
 ```
