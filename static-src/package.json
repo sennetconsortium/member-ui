@@ -4,7 +4,10 @@
   "description": "Member UI",
   "main": "index.js",
   "scripts": {
-    "js": "coffee --transpile --join app.min.js -o ../static/js  -cw ./js/App.coffee ./js/*.coffee ./js/apps.coffee"
+    "js": "coffee --transpile --join app.js -o ../static/js  -cw ./js/App.coffee ./js/*.coffee ./js/apps.coffee",
+    "build": "./node_modules/uglify-js/bin/uglifyjs ../static/js/app.js > ../static/js/app.min.js",
+    "watch": "watch -p \"../static/js/app.js\" -c \"npm run build\"",
+    "dev": "concurrently \"npm:js\" \"npm:watch\""
   },
   "prettier": {
     "singleQuote": true,
@@ -27,6 +30,9 @@
     "@babel/core": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
     "coffeescript": "^2.7.0",
-    "prettier": "^2.7.1"
+    "concurrently": "^7.5.0",
+    "prettier": "^2.7.1",
+    "uglify-js": "^3.17.4",
+    "watch-cli": "^0.2.3"
   }
 }

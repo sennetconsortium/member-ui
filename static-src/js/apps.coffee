@@ -1,5 +1,3 @@
-
-
 (->
   $('document').ready ->
     $('[data-js-toastit]').ToastIt()

@@ -1,3 +1,13 @@
+###
+    Used to make ajax calls to specified URL.
+    Usage: $(selectorName).ApiCall({url: '/path', callback: console.log })
+    @param options Object
+            .url
+            .method
+            .action
+            .callback
+            .xhrFields
+###
 class ApiCall extends App
     constructor: (el, options) ->
         super(el, options)
@@ -38,16 +48,20 @@ class ApiCall extends App
         e.preventDefault()
         @isBusy = true
         $el = @currentTarget(e)
-        url = $el.addClass(@classes.busy).data('js-apicall')
-        action = $el.data('action')
+        url = $el.addClass(@classes.busy).data('js-apicall') or @options.url
+        _xhrFields = $el.data('xhrFields') or @options.xhrFields or {}
+        xhrFields =
+            responseType: $el.data('responsetype') or @options.responseType or 'json'
+        xhrFields = $.extend(xhrFields, _xhrFields)
         $.ajax
-            type: 'GET' || $el.data('method')
-            url: url or @options.url
-            xhrFields:
-                responseType: action or @options.action
+            type: 'GET' or $el.data('method') or @options.method
+            url: url
+            xhrFields: xhrFields
             success: (data) =>
-                if (action == 'blob')
+                if (xhrFields.responseType == 'blob')
                     @handleBlob(e, data)
+                if (@options.callback && typeof @options.callback == 'function')
+                    @options.callback(e, data)
             error: (xhr, textStatus, errorThrown) =>
                 console.error textStatus
                 @showError()

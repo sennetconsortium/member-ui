@@ -1,3 +1,8 @@
+###
+    Used to create toast messages.
+    Usage: $('[data-js-toastit]').ToastIt()
+        <button data-js-toastit="Tell me something ...">Toast</button>
+###
 class ToastIt extends App
     constructor: (el, options) ->
         super(el, options)
@@ -11,9 +16,7 @@ class ToastIt extends App
         return
 
     events: ->
-
         @el.on 'click', (e) =>
-            console.log(@tag)
             if !@currentTarget(e).hasClass(@classes.busy)
                 @handleToast e
 
