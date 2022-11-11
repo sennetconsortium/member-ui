@@ -2022,7 +2022,7 @@ def get_all_users_with_all_info():
                 # Also get the globus_user_id
                 wp_user_meta_globus_user_id = WPUserMeta.query.filter(WPUserMeta.user_id == user.id, WPUserMeta.meta_key.like('openid-connect-generic-subject-identity')).first()
                 # Get the user Capability
-                capability = 'administrator' if 'admin' in capabilities.meta_value else 'member'
+                capability = 'administrator' if 'administrator' in capabilities.meta_value else 'member'
 
                 # Construct a new member dict and add to the members list
                 member = {
@@ -2032,7 +2032,6 @@ def get_all_users_with_all_info():
                     'organization': connection_data.organization,
                     'component': connection_data.department,
                     'role': connection_data.title,
-                    'bio': connection_data.bio,
                     'email': user.user_email.lower(),
                     'capability': capability
                 }
