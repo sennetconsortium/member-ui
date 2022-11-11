@@ -1976,6 +1976,7 @@ def match(globus_user_id, connection_id):
 
     return show_admin_info("This registration has been approved successfully by using an exisiting mathcing profile!")
 
+
 # Instructions
 @app.route("/find_globus_identity", methods=['GET'])
 @login_required
@@ -1997,6 +1998,100 @@ def unlink_globus_identities():
     }
 
     return render_template('instructions/unlink_globus_identities.html', data = context)
+
+
+def get_connection_keys():
+    return ['other_component', 'other_organization', 'other_role', 'access_requests',
+            'globus_identity', 'google_email', 'github_username', 'slack_username', 'protocols_io_email',
+            'website', 'orcid', 'pm', 'pm_name', 'pm_email']
+
+
+# Get a list of all approved users
+def get_all_users_with_all_info():
+    users = list()
+    # Order users by ID DESC
+    wp_users = WPUser.query.order_by(WPUser.id.desc()).all()
+    for user in wp_users:
+        # Check if this target user is a member or administrator (capabilities will be empty dict if not member role)
+        capabilities = next((meta for meta in user.metas if (meta.meta_key == wp_db_table_prefix + 'capabilities') and ('member' in meta.meta_value) or ('administrator' in meta.meta_value)), {})
+        if capabilities:
+            # Use this check in case certain user doesn't have the connection info
+            if user.connection:
+                # Note user.connection returns a list of connections (should be only one though)
+                connection_data = user.connection[0]
+                # Also get the globus_user_id
+                wp_user_meta_globus_user_id = WPUserMeta.query.filter(WPUserMeta.user_id == user.id, WPUserMeta.meta_key.like('openid-connect-generic-subject-identity')).first()
+                # Get the user Capability
+                capability = 'administrator' if 'administrator' in capabilities.meta_value else 'member'
+
+                # Construct a new member dict and add to the members list
+                member = {
+                    'globus_user_id': wp_user_meta_globus_user_id.meta_value,
+                    'first_name': connection_data.first_name,
+                    'last_name': connection_data.last_name,
+                    'organization': connection_data.organization,
+                    'component': connection_data.department,
+                    'role': connection_data.title,
+                    'email': user.user_email.lower(),
+                    'capability': capability
+                }
+                keys = get_connection_keys()
+                obj = None
+                try:
+                    globus_user = next((meta for meta in user.metas if meta.meta_key == 'globus_username'), {'meta_value': ''})
+                    if globus_user is not None:
+                        member['globus_username'] = globus_user['meta_value'] if isinstance(globus_user, (dict)) else globus_user.meta_value
+                    for k in keys:
+                        if k == 'pm':
+                            obj = next((meta for meta in connection_data.metas if meta.meta_key == connection_meta_key_prefix + 'pm'), {'meta_value': ''})
+                            if obj is not None:
+                                member['pm'] = 'Yes' if obj.meta_value == '1' else 'No'
+                        else:
+                            obj = next((meta for meta in connection_data.metas if meta.meta_key == connection_meta_key_prefix + k), {'meta_value': ''})
+                            if obj is not None:
+                                member[k] = obj['meta_value'] if isinstance(obj, (dict)) else obj.meta_value
+                except Exception as e:
+                    print(e)
+                    # print(user.user_email)
+
+                users.append(member)
+
+    return users
+
+
+def format_user_entry(val, other):
+    if val == 'Other':
+        return f"\"Other: {other}\""
+    else:
+        return val
+
+
+@app.route("/downloads/users", methods=['GET'])
+@login_required
+@admin_required
+def downloads_users():
+    users = get_all_users_with_all_info()
+    csv = 'Globus Username Associated, Globus Identity, First Name, Last Name, Email, Organization, Component, PM, PM email, Role, Access Requests, Gdrive account, GitHub, Slack, protocols.io, Capability  \n'
+
+    for user in users:
+        i = StageUser(user)
+        access_requests = ''
+        try:
+            access_requests_array = ast.literal_eval(json.loads(i.access_requests))
+            access_requests_array.sort()
+            access_requests = "; ".join(access_requests_array)
+        except Exception as e:
+            print(e)
+
+        csv += f"{i.globus_username},{i.globus_identity},{i.first_name},{i.last_name},{i.email},{format_user_entry(i.organization, i.other_organization)},"
+        csv += f"{format_user_entry(i.component, i.other_component)},{i.pm_name},{i.pm_email},{format_user_entry(i.role, i.other_role)},{access_requests},"
+        csv += f"{i.google_email},{i.github_username},{i.slack_username},{i.protocols_io_email},{user['capability']}\n"
+
+    r = Response(csv, status=200, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    r.headers["Content-Type"] = 'text/csv'
+    r.headers['Content-Disposition'] = 'attachment; filename="sennet-members.csv"'
+
+    return r
 
 
 # Run Server
