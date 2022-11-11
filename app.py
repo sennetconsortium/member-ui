@@ -2071,15 +2071,21 @@ def format_user_entry(val, other):
 @admin_required
 def downloads_users():
     users = get_all_users_with_all_info()
-    csv = 'Globus Username Associated, First Name, Last Name, Email, Organization, Component, PM, PM email, Role, Access Requests, SenNet Data Via Globus, Gdrive account, GitHub, Slack, protocols.io, Capability  \n'
+    csv = 'Globus Username Associated, Globus Identity, First Name, Last Name, Email, Organization, Component, PM, PM email, Role, Access Requests, Gdrive account, GitHub, Slack, protocols.io, Capability  \n'
 
     for user in users:
         i = StageUser(user)
-        access_requests = i.access_requests.replace('\\"', '').replace(']"', '').replace('"[', '')
+        access_requests = ''
+        try:
+            access_requests_array = ast.literal_eval(json.loads(i.access_requests))
+            access_requests_array.sort()
+            access_requests = "; ".join(access_requests_array)
+        except Exception as e:
+            print(e)
 
-        csv += f"{i.globus_username},{i.first_name},{i.last_name},{i.email},{format_user_entry(i.organization, i.other_organization)},"
+        csv += f"{i.globus_username},{i.globus_identity},{i.first_name},{i.last_name},{i.email},{format_user_entry(i.organization, i.other_organization)},"
         csv += f"{format_user_entry(i.component, i.other_component)},{i.pm_name},{i.pm_email},{format_user_entry(i.role, i.other_role)},{access_requests},"
-        csv += f"{i.globus_identity},{i.google_email},{i.github_username},{i.slack_username},{i.protocols_io_email},{user['capability']}\n"
+        csv += f"{i.google_email},{i.github_username},{i.slack_username},{i.protocols_io_email},{user['capability']}\n"
 
     r = Response(csv, status=200, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     r.headers["Content-Type"] = 'text/csv'
