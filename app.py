@@ -2059,7 +2059,7 @@ def get_all_users_with_all_info():
     return users
 
 
-def format_user_entry(val, other):
+def format_entry(val, other = ''):
     if val == 'Other':
         return f"\"Other: {other}\""
     else:
@@ -2079,13 +2079,13 @@ def downloads_users():
         try:
             access_requests_array = ast.literal_eval(json.loads(i.access_requests))
             access_requests_array.sort()
-            access_requests = "; ".join(access_requests_array)
+            access_requests = ", ".join(access_requests_array)
         except Exception as e:
             print(e)
 
-        csv += f"{i.globus_username},{i.globus_identity},{i.first_name},{i.last_name},{i.email},{format_user_entry(i.organization, i.other_organization)},"
-        csv += f"{format_user_entry(i.component, i.other_component)},{i.pm_name},{i.pm_email},{format_user_entry(i.role, i.other_role)},{access_requests},"
-        csv += f"{i.google_email},{i.github_username},{i.slack_username},{i.protocols_io_email},{user['capability']}\n"
+        csv += f"{format_entry(i.globus_username)},{format_entry(i.globus_identity)},{format_entry(i.first_name)},{format_entry(i.last_name)},{i.email},{format_entry(i.organization, i.other_organization)},"
+        csv += f"{format_entry(i.component, i.other_component)},{format_entry(i.pm_name)},{i.pm_email},{format_entry(i.role, i.other_role)},{format_entry(access_requests)},"
+        csv += f"{format_entry(i.google_email)},{format_entry(i.github_username)},{format_entry(i.slack_username)},{format_entry(i.protocols_io_email)},{user['capability']}\n"
 
     r = Response(csv, status=200, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     r.headers["Content-Type"] = 'text/csv'
