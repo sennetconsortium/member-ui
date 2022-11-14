@@ -2063,7 +2063,7 @@ def format_user_entry(val, other):
     if val == 'Other':
         return f"\"Other: {other}\""
     else:
-        return val
+        return f"\"{val}\""
 
 
 @app.route("/downloads/users", methods=['GET'])
