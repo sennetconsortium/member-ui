@@ -2059,9 +2059,12 @@ def get_all_users_with_all_info():
     return users
 
 
-def format_entry(val, other = ''):
+def format_entry(val, other=''):
+    val.strip()
     if val == 'Other':
         return f"\"Other: {other}\""
+    elif val.startswith("\"") and val.endswith("\""):
+        return val
     else:
         return f"\"{val}\""
 
