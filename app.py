@@ -2060,8 +2060,8 @@ def get_all_users_with_all_info():
 
 
 def format_entry(val, other=''):
-    val.strip()
-    val = val.replace('"', '""')
+    val = val.strip().replace('"', '""')
+    other = other.strip().replace('"', '""')
     if val == 'Other':
         return f"\"Other: {other}\""
     else:
