@@ -27,6 +27,11 @@ from slugify import slugify
 
 # For debugging
 from pprint import pprint
+import logging
+
+
+logging.basicConfig(format='[%(asctime)s] %(levelname)s in %(module)s: %(message)s', level=logging.DEBUG, datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger(__name__)
 
 
 # Init app and use the config from instance folder
@@ -1457,11 +1462,15 @@ def register():
             stage_user = get_stage_user(session['globus_user_id'])
             # Note: stage_user.deny stores 1 or 0 in database
             if not stage_user.deny:
-                return show_user_info("Your registration has been submitted for approval. You'll get an email once it's approved or denied.")
+                logger.info(f"=========== Pending Registration of globus_user_id {session['globus_user_id']} ===========")
+
+                return show_user_info("You have an existing registration waiting to be processed. An email will be sent to you once the registration is processed.")
             else:
                 return show_user_info("Sorry, your registration has been denied.")
         else:
             if request.method == 'POST':
+                logger.info(f"=========== New Registration POSTed of globus_user_id {session['globus_user_id']} ===========")
+
                 # reCAPTCHA validation
                 recaptcha_response = request.form['g-recaptcha-response']
                 values = {
