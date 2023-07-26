@@ -158,6 +158,7 @@ function cn_register_custom_metabox_and_text_field() {
                     'Co-Investigator' => 'Co-Investigator',
                     'Complicance Officer'  => 'Complicance Officer',
                     'Computer Scientist'  => 'Computer Scientist',
+                    'CUSP'  => 'CUSP',
                     'Data Analysis Core' => 'Data Analysis Core',
                     'Data Architect' => 'Data Architect',
                     'Data Curator' => 'Data Curator',
