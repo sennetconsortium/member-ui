@@ -1,11 +1,7 @@
 asn1crypto==0.24.0
 blinker==1.4
 certifi==2019.6.16
-
-# Have to disable the pinned version to avoid install error
-#cffi==1.12.3
-cffi
-
+cffi==1.12.3
 chardet==3.0.4
 click==7.0
 cryptography==3.3.2

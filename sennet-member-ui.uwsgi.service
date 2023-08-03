@@ -3,8 +3,7 @@ Description=uWSGI serivice for SenNet Member Registration and Profile
 After=syslog.target
 
 [Service]
-#ExecStart=/usr/sbin/uwsgi --ini /opt/sennet/member-ui/uwsgi.ini -H /opt/sennet/member-ui/venv-member-ui/
-ExecStart=/opt/sennet/member-ui/venv-member-ui/bin/uwsgi --ini /opt/sennet/member-ui/uwsgi.ini -H /opt/sennet/member-ui/venv-member-ui/
+ExecStart=/usr/sbin/uwsgi --ini /opt/sennet/member-ui/uwsgi.ini -H /opt/sennet/member-ui/venv-member-ui/
 Restart=always
 KillSignal=SIGQUIT
 Type=notify
