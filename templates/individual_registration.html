@@ -36,7 +36,7 @@ Other Role: {{ data.stage_user.other_role }} <br />
 {% endif %}
 
 <br />
-HuBMAP service(s) access requested: <br />
+SenNet service(s) access requested: <br />
 <ul>
 {% for req in data.access_requests_list %}
 <li>{{ req }} </li>
@@ -45,20 +45,20 @@ HuBMAP service(s) access requested: <br />
 
 <br />
 
-{% if 'HuBMAP Data Via Globus' in data.stage_user.access_requests %}
-Globus username to be used for HuBMAP Data group access: {{ data.stage_user.globus_identity }} <br />
+{% if 'SenNet Data Via Globus' in data.stage_user.access_requests %}
+Globus username to be used for SenNet Data group access: {{ data.stage_user.globus_identity }} <br />
 {% endif %}
 
-{% if 'HuBMAP Google Drive Share' in data.stage_user.access_requests %}
-Google account for HuBMAP Google Drive Share: {{ data.stage_user.google_email }} <br />
+{% if 'SenNet Google Drive Share' in data.stage_user.access_requests %}
+Google account for SenNet Google Drive Share: {{ data.stage_user.google_email }} <br />
 {% endif %}
 
-{% if 'HuBMAP GitHub Repository' in data.stage_user.access_requests %}
+{% if 'SenNet GitHub Repository' in data.stage_user.access_requests %}
 Github username: {{ data.stage_user.github_username }} <br />
 {% endif %}
 
-{% if 'HuBMAP Slack Workspace' in data.stage_user.access_requests %}
-Email for HuBMAP Slack Workspace: {{ data.stage_user.slack_username }} <br />
+{% if 'SenNet Slack Workspace' in data.stage_user.access_requests %}
+Email for SenNet Slack Workspace: {{ data.stage_user.slack_username }} <br />
 {% endif %}
 
 {% if 'protocols.io' in data.stage_user.access_requests %}
@@ -126,7 +126,8 @@ No project manager for this user
   </div>
 </div>
 
-<!-- Disabled profile matching by Zhou 10/6/2023 -->
+
+<!-- Disabled profile matching by Zhou 1/2/2024 -->
 {% if data.matching_profiles|length > 0 %}
 
 <div class="card mt-4">
@@ -135,7 +136,7 @@ No project manager for this user
 
 {#
 <div class="alert alert-info" role="alert">
-Matching profiles found from `wp_connections` table and sorted by the total matching score. Scoring:
+Matching profiles found and sorted by the total matching score. Scoring:
 
 <table class="table table-sm">
   <thead>
@@ -169,7 +170,7 @@ The following results only show total score that is greater than the first name 
       <th scope="col">Last Name</th>
       <th scope="col">Email</th>
       <th scope="col">Organization</th>
-      <th scope="col">HuBMAP Component</th>
+      <th scope="col">SenNet Component</th>
 
       {#<th scope="col">Match Score</th>#}
 
@@ -214,11 +215,10 @@ The following results only show total score that is greater than the first name 
   {% endfor %}
   </tbody>
 </table>
-    
-</div>
+
+  </div>
 </div>
 {% endif %}
-
 
 
 
