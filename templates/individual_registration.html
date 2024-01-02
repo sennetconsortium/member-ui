@@ -127,12 +127,12 @@ No project manager for this user
 </div>
 
 
+<!-- Disabled profile matching by Zhou 1/2/2024 -->
+{% if data.matching_profiles|length > 0 %}
+
 <div class="card mt-4">
   <h5 class="card-header">Possible Existing Matching Profile</h5>
   <div class="card-body">
-    
-
-{% if data.matching_profiles|length > 0 %}
 
 {#
 <div class="alert alert-info" role="alert">
@@ -178,8 +178,8 @@ The following results only show total score that is greater than the first name 
     </tr>
   </thead>
   <tbody>
-	{% for profile in data.matching_profiles %}
-	<tr>
+  {% for profile in data.matching_profiles %}
+  <tr>
       <th scope="row">{{ loop.index }}</th>
       <td>{{ profile.first_name }}</td>
       <td>{{ profile.last_name }}</td>
@@ -193,36 +193,32 @@ The following results only show total score that is greater than the first name 
     </tr>
 
     <!-- Approve by match Modal -->
-	<div class="modal fade" id="approve_by_match_modal_{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-centered" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLongTitle">Approve registraiton by using this matched profile</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
-	        Are you sure you want to approve this registration by using the matched profile?
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-	        <a href="{{ config['FLASK_APP_BASE_URI'] }}/match/{{ data.stage_user.globus_user_id }}/{{ profile.id }}" class="btn btn-primary">Yes, approve by using matched profile</a>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-	{% endfor %}
+  <div class="modal fade" id="approve_by_match_modal_{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Approve registraiton by using this matched profile</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to approve this registration by using the matched profile?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <a href="{{ config['FLASK_APP_BASE_URI'] }}/match/{{ data.stage_user.globus_user_id }}/{{ profile.id }}" class="btn btn-primary">Yes, approve by using matched profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
   </tbody>
 </table>
-{% else %}
-<div class="alert alert-info" role="alert">
-No matching profiles found.
-</div>
-{% endif %}
+
   </div>
 </div>
-
+{% endif %}
 
 
 

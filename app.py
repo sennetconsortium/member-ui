@@ -1868,8 +1868,13 @@ def registrations(globus_user_id):
             return show_admin_error("This stage user does not exist!")
         else:
             # Check if there's any matching profiles in the `wp_connections` found
-            matching_profiles = get_matching_profiles(stage_user.last_name, stage_user.first_name, stage_user.email, stage_user.organization)
+            # Disabled by Zhou on 1/2/2024 to prevent decoding issue
+            # No longer need this matching profile feature for new members.
+            # matching_profiles = get_matching_profiles(stage_user.last_name, stage_user.first_name, stage_user.email, stage_user.organization)
             #pprint(vars(list(matching_profiles)[0]))
+
+            # Use an empty list for all new registrations - Zhou 1/2/2024
+            matching_profiles = []
             context = {
                 'isAuthenticated': True,
                 'username': session['name'],
