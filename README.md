@@ -11,7 +11,7 @@ This repo contains code that handles the SenNet member registration and profile 
 
 ## Install dependencies
 
-Create a new Python 3.x virtual environment:
+Create a new Python 3.x virtual environment (**Note: Python 3.12 may cause issues with some packages**):
 
 ````
 python3 -m venv venv-member-ui
