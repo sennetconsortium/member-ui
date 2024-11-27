@@ -33,6 +33,10 @@
 
         $("#id_component").change(function() {
             let id = $(this).children("option:selected").val();
+
+            // Remove the single quote
+            id = id.replaceAll("'", "");
+
             // All cards are hidden by default
             if (id === '----') {
                 $("#active_card").html('');
@@ -372,9 +376,14 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="email">Email address <span class="text-danger">*</span></label>
-                        <!-- Disallow edit email since it's used with globus login -->
-                        <input type="email" name="email" value="{{ data.email }}" class="form-control" id="id_email" disabled>
-                        <input type="hidden" name="email" value="{{ data.email }}">
+                        <input type="email" name="email" value="{{ data.email }}" class="form-control" id="id_email">
+                    </div>
+                    <div class="form-group">
+                        {% if data.globus_parsed_email %}
+                            <input type="hidden" name="globus_parsed_email" value="{{ data.globus_parsed_email }}">
+                        {% else %}
+                            <input type="hidden" name="globus_parsed_email" value="{{ data.email }}" class="form-control" maxlength="200" id="id_globus_parsed_email">
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col">
@@ -489,10 +498,10 @@
                                     <label for="access_requests">Which SenNet resources will you need to access?</label>
                                     <ul id="id_access_requests">
     <li><label for="id_access_requests_0">
-        <input type="checkbox" name="access_requests" value="Member Portal" id="id_access_requests_0" disabled checked>
-        <input type="hidden" name="access_requests" value="Member Portal" />
+        <input type="checkbox" name="access_requests" value="Collaboration Portal" id="id_access_requests_0" disabled checked>
+        <input type="hidden" name="access_requests" value="Collaboration Portal" />
 
- Member Portal</label>
+ Collaboration Portal</label>
 
 </li>
 
@@ -632,15 +641,13 @@
                             There are errors, please correct the fields above.
                         </div>
 
-            <!-- reCAPTCHA v2 checkbox -->
-            <div class="row">
+             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group g-recaptcha" data-callback="recaptchaCallback" data-sitekey="{{ data.recaptcha_site_key }}"></div>
                 </div>
             </div>
 
-
-            <button type="submit" id="submitBtn" class="btn btn-primary btn-lg" disabled>Submit</button>
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-lg" >Submit</button>
         </form>
 
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
