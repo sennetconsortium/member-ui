@@ -1772,24 +1772,34 @@ def profile():
                 try:
                     # Update user profile in database
                     update_user_profile(connection_id, user_info, profile_pic_option, img_to_upload)
+                    try:
+                        # Send email to admin for user profile update
+                        # so the admin can do furtuer changes in globus
+                        send_user_profile_updated_mail(user_info, old_access_requests_dict)
+
+                    except Exception as e:
+                        print("Failed to send user profile update email to admin.")
+                        print(e)
+                        return show_user_error(
+                            "Your profile has been updated but the system failed to send confirmation email to admin. No worries, no action needed from you.")
                 except Exception as e:
                     print("Failed to update user profile!")
                     print(e)
                     return show_user_error("Oops! The system failed to update your profile changes!")
-                else:
-                    # Only email admin when access requests list changed
-                    # Compare list to list, ordering should be the same, no need to sort
-                    if user_info['access_requests'] != old_access_requests_dict['access_requests']:
-                        try:
-                            # Send email to admin for user profile update
-                            # so the admin can do furtuer changes in globus
-                            send_user_profile_updated_mail(user_info, old_access_requests_dict)
-
-                        except Exception as e:
-                            print("Failed to send user profile update email to admin.")
-                            print(e)
-                            return show_user_error(
-                                "Your profile has been updated but the system failed to send confirmation email to admin. No worries, no action needed from you.")
+                # else:
+                #     # Only email admin when access requests list changed
+                #     # Compare list to list, ordering should be the same, no need to sort
+                #     if user_info['access_requests'] != old_access_requests_dict['access_requests']:
+                #         try:
+                #             # Send email to admin for user profile update
+                #             # so the admin can do furtuer changes in globus
+                #             send_user_profile_updated_mail(user_info, old_access_requests_dict)
+                #
+                #         except Exception as e:
+                #             print("Failed to send user profile update email to admin.")
+                #             print(e)
+                #             return show_user_error(
+                #                 "Your profile has been updated but the system failed to send confirmation email to admin. No worries, no action needed from you.")
 
                 # Also notify the user
                 return show_user_confirmation(
