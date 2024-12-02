@@ -30,7 +30,8 @@
         $("#oth-org").hide();
         $("#oth-role").hide();
         $("#globus-identity").hide();
-        $("#google-email").hide();
+        // $("#globus_parsed_email").hide();
+        // $("#google-email").hide();
         $("#slack-username").hide();
         $("#protocols-io-email").hide();
         $("#github-username").hide();
@@ -44,6 +45,10 @@
 
         $("#id_component").change(function() {
             let id = $(this).children("option:selected").val();
+
+            // Remove the single quote
+            id = id.replaceAll("'", "");
+            
             // All cards are hidden by default
             if (id === '----') {
                 $("#active_card").html('');
@@ -132,7 +137,7 @@
             $("#oth-role").hide();
         }
         
-        // All users need access to "Collabration Portal"
+        // All users need access to "Member Portal"
         // Disallow them to uncheck this option
         // Disabled in HTML, no need to handle it in js here
 
@@ -248,6 +253,7 @@
         
         $("#registration-form").submit(function(e){
             e.preventDefault();
+            console.debug('%c◉ this ', 'color:#00ff7b', this);
             var form = this;
             valid = true;
             $(form).find('.invalid-feedback').remove();
@@ -366,8 +372,10 @@
                 $("#id_pm_email").after("<div class='invalid-feedback'>Project Manager's email is required.</div>");
             }
             if(valid){
+                console.debug('%c◉ form ', 'color:#00ff7b', form);
                 form.submit();
             } else {
+                console.debug('%c◉ form ', 'color:#ff005d', form);
                 $(".main-error-message").show();
             }
         });
@@ -401,10 +409,16 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="email">Email address <span class="text-danger">*</span></label>
-                        <!-- Disallow edit email since it's used with globus login -->
-                        <input type="email" name="email" value="{{ data.email }}" class="form-control" id="id_email" disabled>
-                        <input type="hidden" name="email" value="{{ data.email }}">
+                        <input type="email" name="email" value="{{ data.email }}" class="form-control" id="id_email">
                     </div>
+                    <div class="form-group">
+                        {% if data.globus_parsed_email %}
+                            <input type="hidden" name="globus_parsed_email" value="{{ data.globus_parsed_email }}">
+                        {% else %}
+                            <input type="hidden" name="globus_parsed_email" value="{{ data.email }}" class="form-control" maxlength="200" id="id_globus_parsed_email">
+                        {% endif %}
+                    </div>
+
                 </div>
                 <div class="col">
                     <div class="form-group">

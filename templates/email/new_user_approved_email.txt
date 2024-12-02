@@ -1,10 +1,13 @@
 Dear {{ data.first_name }} {{ data.last_name }},
 
-Your SenNet Consortium account registraiton has been approved. You may update your profile information by visiting {{ config['FLASK_APP_BASE_URI'] }}.
+Your SenNet Consortium account registration has been approved. You may update your profile information by visiting your SenNet profile: {{ config['FLASK_APP_BASE_URI'] }}/profile.
 
-If you requested access to other resources you will be notified separately when access has been granted.
+If you requested access to other resources, you will be notified separately when access has been granted.
+
+In the meantime, please peruse the information now available to you in the SenNet Members Portal: https://sennetconsortium.org/members/.
+There, you will be able to view the Consortium calendar: https://sennetconsortium.org/members/#calendar, the Consortium directory: https://sennetconsortium.org/directory/, and a list of helpful onboarding resources.
+If you would like a more general overview of the resources available on https://sennetconsortium.org/, you can view one here https://www.youtube.com/watch?v=3HP-DCLNZGg&themeRefresh=1, or visit our FAQs page: https://sennetconsortium.org/frequently-asked-questions/.
 
 Thank you!
 
-
-SenNet Member Registration and Profile
+SenNet Member Registration
