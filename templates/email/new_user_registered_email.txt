@@ -28,26 +28,25 @@ SenNet service(s) access requested:
 {% endfor %}
 
 {% if 'SenNet Data Via Globus' in data['access_requests'] %}
-Globus username to be used for SenNet Data group access: {{ data['globus_identity'] }} <br />
-{% endif %}
-
-{% if 'SenNet Google Drive Share' in data['access_requests'] %}
-Google account for SenNet Google Drive Share: {{ data['google_email'] }}
+Globus username to be used for SenNet Data group access: {{ data['globus_identity'] }}
 {% endif %}
 
 {% if 'SenNet GitHub Repository' in data['access_requests'] %}
-Github username: {{ data['github_username'] }}
+Github username: {{ data['github_username'] }} 
+{% endif %}
+
+{% if 'SenNet Google Drive Share' in data['access_requests'] %}
+Google account for SenNet Google Drive Share: {{ data['google_email'] }} 
 {% endif %}
 
 {% if 'SenNet Slack Workspace' in data['access_requests'] %}
-Email for SenNet Slack Workspace: {{ data['slack_username'] }}
+Email for SenNet Slack Workspace: {{ data['slack_username'] }} 
 {% endif %}
 
 {% if 'protocols.io' in data['access_requests'] %}
-Email for protocols.io: {{ data['protocols_io_email'] }}
-{% endif %}
+Email for protocols.io: {{ data['protocols_io_email'] }} 
+{% endif %} 
 
-<br />
 {% if data['pm'] %}
 The user would like the following project manager to be copied on all communications:
 Name: {{ data['pm_name'] }}
@@ -56,9 +55,6 @@ Email: {{ data['pm_email'] }}
 No project manager for this user
 {% endif %}
 
-
 URL to approve this user: {{ config['FLASK_APP_BASE_URI'] }}/registrations/{{ data['globus_user_id'] }}
-
-
 
 SenNet Member Registration and Profile

@@ -33,6 +33,10 @@
 
         $("#id_component").change(function() {
             let id = $(this).children("option:selected").val();
+
+            // Remove the single quote
+            id = id.replaceAll("'", "");
+
             // All cards are hidden by default
             if (id === '----') {
                 $("#active_card").html('');
@@ -117,7 +121,7 @@
             $("#oth-role").hide();
         }
 
-        // All users need access to Collabration Portal
+        // All users need access to Member Portal
         // Disallow them to uncheck this option
         // Disabled in HTML, no need to handle it in js here
         if ($("#id_access_requests_1").prop('checked')){
@@ -372,9 +376,14 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="email">Email address <span class="text-danger">*</span></label>
-                        <!-- Disallow edit email since it's used with globus login -->
-                        <input type="email" name="email" value="{{ data.email }}" class="form-control" id="id_email" disabled>
-                        <input type="hidden" name="email" value="{{ data.email }}">
+                        <input type="email" name="email" value="{{ data.email }}" class="form-control" id="id_email">
+                    </div>
+                    <div class="form-group">
+                        {% if data.globus_parsed_email %}
+                            <input type="hidden" name="globus_parsed_email" value="{{ data.globus_parsed_email }}">
+                        {% else %}
+                            <input type="hidden" name="globus_parsed_email" value="{{ data.email }}" class="form-control" maxlength="200" id="id_globus_parsed_email">
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col">
@@ -632,15 +641,13 @@
                             There are errors, please correct the fields above.
                         </div>
 
-            <!-- reCAPTCHA v2 checkbox -->
-            <div class="row">
+             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group g-recaptcha" data-callback="recaptchaCallback" data-sitekey="{{ data.recaptcha_site_key }}"></div>
                 </div>
             </div>
 
-
-            <button type="submit" id="submitBtn" class="btn btn-primary btn-lg" disabled>Submit</button>
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-lg" >Submit</button>
         </form>
 
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
