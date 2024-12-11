@@ -1372,7 +1372,12 @@ def get_all_members():
 
                 # Deseriliaze User Email
                 deserilized_email = ''
-                deserilized_email_dict = phpserialize.loads(connection_data.email.encode('utf-8'), decode_strings=True)
+                deserilized_email_dict = {}
+                try:
+                    deserilized_email_dict = phpserialize.loads(connection_data.email.encode('utf-8'),
+                                                                decode_strings=True)
+                except Exception as e:
+                    print(f"No email found for: {connection_data.first_name} {connection_data.last_name} {connection_data.email}")
                 if deserilized_email_dict:
                     deserilized_email = (deserilized_email_dict[0])['address']
 
