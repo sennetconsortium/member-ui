@@ -1389,8 +1389,8 @@ def get_all_members():
                     'email': deserilized_email,
                     'organization': connection_data.organization
                 }
-                print(member)
-                print('-----------------')
+                # print(member)
+                # print('-----------------')
                 members.append(member)
 
     return members
@@ -1978,17 +1978,19 @@ def members(globus_user_id):
 
         # Deserialize the phone number value to a python dict
         deserilized_phone = ''
-        deserilized_phone_dict = phpserialize.loads(connection_data['phone_numbers'].encode('utf-8'),
-                                                    decode_strings=True)
-        # Add another new property for display only
-        if deserilized_phone_dict:
-            deserilized_phone = (deserilized_phone_dict[0])['number']
+        if connection_data['phone_numbers'] != '':
+            deserilized_phone_dict = phpserialize.loads(connection_data['phone_numbers'].encode('utf-8'),
+                                                        decode_strings=True)
+            # Add another new property for display only
+            if deserilized_phone_dict:
+                deserilized_phone = (deserilized_phone_dict[0])['number']
 
         # Deseriliaze User Email
         deserilized_email = ''
-        deserilized_email_dict = phpserialize.loads(connection_data['email'].encode('utf-8'), decode_strings=True)
-        if deserilized_email_dict:
-            deserilized_email = (deserilized_email_dict[0])['address']
+        if connection_data['email'] != '':
+            deserilized_email_dict = phpserialize.loads(connection_data['email'].encode('utf-8'), decode_strings=True)
+            if deserilized_email_dict:
+                deserilized_email = (deserilized_email_dict[0])['address']
 
         initial_data = {
             # Data pulled from the `wp_connections` table
