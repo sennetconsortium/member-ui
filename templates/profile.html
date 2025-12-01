@@ -718,9 +718,9 @@ Note: You can't edit resources that you've been approved to use.
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-		                            <label for="orcid">What is your ORCID ID?</label>
-		                            <input type="text" name="orcid" value="{{ data.orcid }}" class="form-control" maxlength="100" id="id_orcid">
-		                            
+                                    <label for="orcid">What is your ORCID ID?</label>
+                                    <span class="text-danger">Provide ID in the following format: XXXX-XXXX-XXXX-XXXX </span>
+		                            <input type="text" name="orcid" value="{{ data.orcid }}" class="form-control" maxlength="100" id="id_orcid" pattern="^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]{1}$">
 		                        </div>
                             </div>
 
