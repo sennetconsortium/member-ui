@@ -34,7 +34,7 @@ function cn_register_custom_metabox_and_text_field() {
                     'TMC - Columbia University Irving Medical Center' => 'TMC - Columbia University Irving Medical Center',
                     'TMC - Johns Hopkins University'   => 'TMC - Johns Hopkins University',
                     'TMC - UConn Health' => 'TMC - UConn Health',
-                    'TMC - University of California San Diego' => 'TMC - University of California San Diego',
+                    'TMC - Sanford Burnham Prebys and UCSD' => 'TMC - Sanford Burnham Prebys and UCSD',
                     'TMC - University of Minnesota - Robbins' => 'TMC - University of Minnesota - Robbins',
                     'TMC - University of Minnesota - Niedernhofer' => 'TMC - University of Minnesota - Niedernhofer',
                     'TMC - University of Pittsburgh' => 'TMC - University of Pittsburgh',
